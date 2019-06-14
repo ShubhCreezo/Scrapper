@@ -88,8 +88,9 @@ counter = len(activityName)
 
 for elem in range(counter):
     activityName[elem].click()
-    element = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CLASS_NAME, "section-editorial-quote")))
+    # element = WebDriverWait(driver, 20).until(
+    #     EC.element_to_be_clickable((By.CLASS_NAME, "section-editorial-quote")))
+    driver.implicitly_wait(15)
 
     pageURL = driver.current_url
     pageURLList.append(pageURL)
@@ -101,9 +102,12 @@ for elem in range(counter):
         if '@' in elem:
             coordinateTemp = elem
             break
+        else:
+            coordinateAvailable = False
 
     coordinateString = coordinateTemp.strip('@z')
     coordinateList = coordinateString.split(',')
+    print(coordinateList)
     if coordinateAvailable:
         latitudeList.append(coordinateList[0])
         longitudeList.append(coordinateList[1])

@@ -207,8 +207,11 @@ def main(cityName):
         # driver.get(mainURL)
         driver.back()
 
-        element = WebDriverWait(driver, 200).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, 'section-result-title')))
+        try:
+            element = WebDriverWait(driver, 50).until(
+                EC.element_to_be_clickable((By.CLASS_NAME, 'section-result-title')))
+        except TimeoutException:
+            time.sleep(2)
         activityName = driver.find_elements_by_class_name('section-result-title')
 
     # Adding listName in Dataframe

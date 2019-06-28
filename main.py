@@ -54,7 +54,7 @@ def mainSite(counter, url):
 mainSite(counter, url)
 
 # input the city we want to search
-cityName = 'Lucerne, Switzerland'
+cityName = 'Geneva, Switzerland'
 searchTerm = 'Things to do in ' + cityName
 
 # search for activities in the city
@@ -118,6 +118,8 @@ def main(maindf2, cityName2, dfReturn2):
         except ElementClickInterceptedException:
             time.sleep(2)
             activityName[elem].click()
+        except IndexError:
+            break
         except:
             time.sleep(2)
             activityName = driver.find_elements_by_class_name('section-result-title')
@@ -172,12 +174,13 @@ def main(maindf2, cityName2, dfReturn2):
 
             # this gets address of the activity
             try:
-                address = driver.find_element_by_xpath('//*[@id="pane"]/div/div[1]/div/div/div[10]/div/div[1]/span[3]/span[3]')
-                if cityName2 in address.get_attribute('innerHTML'):
-                    addressList.append(address.get_attribute('innerHTML'))
-                else:
-                    addressList.append(cityName2)
+                info_text = driver.find_elements_by_class_name('section-info-text')
+                # address1 = driver.find_element_by_class_name('section-info-text')
+                address = info_text[0].find_elements_by_tag_name('span')
+                addressList.append(address[-1].get_attribute('innerHTML'))
             except NoSuchElementException:
+                addressList.append('NA')
+            except IndexError:
                 addressList.append('NA')
 
             # this gets Date and Timing info
@@ -185,21 +188,26 @@ def main(maindf2, cityName2, dfReturn2):
                 daysAndTimingsWrap = driver.find_element_by_class_name('section-popular-times')
                 daysAndTimings = daysAndTimingsWrap.find_element_by_class_name('goog-menu-button-caption')
                 daysAndTimingsList.append(daysAndTimings.get_attribute('innerHTML'))
+
             except NoSuchElementException:
                 daysAndTimingsList.append('NA')
 
             # this gets web info of activity
             try:
-                websiteInfo = driver.find_element_by_xpath('//*[@id="pane"]/div/div[1]/div/div/div[12]/div/div[1]/span[3]/span[3]')
-                websiteInfoList.append(websiteInfo.get_attribute('innerHTML'))
+                websiteInfo = info_text[2].find_elements_by_tag_name('span')
+                websiteInfoList.append(websiteInfo[-1].get_attribute('innerHTML'))
             except NoSuchElementException:
+                websiteInfoList.append('NA')
+            except IndexError:
                 websiteInfoList.append('NA')
 
             # this gets the phone number
             try:
-                phoneNumber = driver.find_element_by_xpath('//*[@id="pane"]/div/div[1]/div/div/div[13]/div/div[1]/span[3]/span[3]')
-                phoneNumberList.append(phoneNumber.get_attribute('innerHTML'))
+                phoneNumber = info_text[3].find_elements_by_tag_name('span')
+                phoneNumberList.append(phoneNumber[-1].get_attribute('innerHTML'))
             except NoSuchElementException:
+                phoneNumberList.append('NA')
+            except IndexError:
                 phoneNumberList.append('NA')
 
             # this gets the cover Image
@@ -212,11 +220,11 @@ def main(maindf2, cityName2, dfReturn2):
 
             # this gets the time at which activity starts
             try:
-                opensAtWrap = driver.find_element_by_class_name('section-info-hour-text')
-                # opensAt = driver.find_element_by_xpath('//*[@id="pane"]/div/div[1]/div/div/div[14]/div[1]/span[2]/span[2]')
-                opensAt = opensAtWrap.find_elements_by_tag_name('span')
-                opensAtList.append(opensAt[1].get_attribute('innerHTML'))
+                opensAt = info_text[4]
+                opensAtList.append(opensAt.get_attribute('innerHTML'))
             except NoSuchElementException:
+                opensAtList.append('NA')
+            except IndexError:
                 opensAtList.append('NA')
 
         # to go back to the main page
